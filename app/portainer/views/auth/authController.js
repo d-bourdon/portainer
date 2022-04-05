@@ -50,7 +50,6 @@ class AuthenticationController {
     };
 
     this.checkForEndpointsAsync = this.checkForEndpointsAsync.bind(this);
-    this.checkForLatestVersionAsync = this.checkForLatestVersionAsync.bind(this);
     this.postLoginSteps = this.postLoginSteps.bind(this);
 
     this.oAuthLoginAsync = this.oAuthLoginAsync.bind(this);
@@ -133,23 +132,6 @@ class AuthenticationController {
     }
   }
 
-  async checkForLatestVersionAsync() {
-    let versionInfo = {
-      UpdateAvailable: false,
-      LatestVersion: '',
-    };
-
-    try {
-      const versionStatus = await this.StatusService.version();
-      if (versionStatus.UpdateAvailable) {
-        versionInfo.UpdateAvailable = true;
-        versionInfo.LatestVersion = versionStatus.LatestVersion;
-      }
-    } finally {
-      this.StateManager.setVersionInfo(versionInfo);
-    }
-  }
-
   async postLoginSteps() {
     await this.StateManager.initialize();
 
@@ -157,7 +139,6 @@ class AuthenticationController {
     this.$analytics.setUserRole(isAdmin ? 'admin' : 'standard-user');
 
     await this.checkForEndpointsAsync();
-    await this.checkForLatestVersionAsync();
   }
   /**
    * END POST LOGIN STEPS SECTION
